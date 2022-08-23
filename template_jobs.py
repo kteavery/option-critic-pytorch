@@ -8,7 +8,7 @@ def batch_atari():
     cf.merge()
 
     games = [
-        'BreakoutNoFrameskip-v4',
+        'AmidarNoFrameskip-v4',
         # 'AlienNoFrameskip-v4',
         # 'DemonAttackNoFrameskip-v4',
         # 'MsPacmanNoFrameskip-v4'

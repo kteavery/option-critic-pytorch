@@ -61,5 +61,5 @@ if __name__ == '__main__':
     # -1 is CPU, a positive integer is the index of GPU
     Config.DEVICE = torch.device('cuda')
 
-    game = 'BreakoutNoFrameskip-v4'
+    game = 'AmidarNoFrameskip-v4'
     option_critic_pixel(game=game)
