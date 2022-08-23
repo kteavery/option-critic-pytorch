@@ -33,20 +33,6 @@ class NatureConvBody(nn.Module):
         return y
 
 
-class DDPGConvBody(nn.Module):
-    def __init__(self, in_channels=4):
-        super(DDPGConvBody, self).__init__()
-        self.feature_dim = 39 * 39 * 32
-        self.conv1 = layer_init(nn.Conv2d(in_channels, 32, kernel_size=3, stride=2))
-        self.conv2 = layer_init(nn.Conv2d(32, 32, kernel_size=3))
-
-    def forward(self, x):
-        y = F.elu(self.conv1(x))
-        y = F.elu(self.conv2(y))
-        y = y.view(y.size(0), -1)
-        return y
-
-
 class FCBody(nn.Module):
     def __init__(self, state_dim, hidden_units=(64, 64), gate=F.relu, noisy_linear=False):
         super(FCBody, self).__init__()
