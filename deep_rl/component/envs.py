@@ -11,9 +11,9 @@ import torch
 from gym.spaces.box import Box
 from gym.spaces.discrete import Discrete
 
-from utils import make_atari, wrap_deepmind
-from utils import FrameStack as FrameStack_
-from utils import SubprocVecEnv, VecEnv
+from .utils import make_atari, wrap_deepmind
+from .utils import FrameStack as FrameStack_
+from .utils import SubprocVecEnv, VecEnv
 
 from ..utils import *
 
