@@ -4,6 +4,8 @@ import numpy as np
 import contextlib
 import os
 from abc import ABC, abstractmethod
+from collections import deque
+import cv2
 
 class NoopResetEnv(gym.Wrapper):
     def __init__(self, env, noop_max=30):
