@@ -1,4 +1,5 @@
 import gym
+from gym import spaces
 import multiprocessing as mp
 import numpy as np
 import contextlib

@@ -5,6 +5,7 @@
 #######################################################################
 
 from deep_rl import *
+import argparse
 
 
 # Option-Critic
@@ -29,7 +30,7 @@ def option_critic_feature(**kwargs):
     run_steps(OptionCriticAgent(config))
 
 
-def option_critic_pixel(**kwargs):
+def option_critic_pixel(lr=1e-4, **kwargs):
     generate_tag(kwargs)
     kwargs.setdefault('log_level', 0)
     config = Config()
@@ -38,7 +39,7 @@ def option_critic_pixel(**kwargs):
     config.task_fn = lambda: Task(config.game, num_envs=config.num_workers)
     config.eval_env = Task(config.game)
     config.num_workers = 16
-    config.optimizer_fn = lambda params: torch.optim.RMSprop(params, lr=1e-4, alpha=0.99, eps=1e-5)
+    config.optimizer_fn = lambda params: torch.optim.RMSprop(params, lr=lr, alpha=0.99, eps=1e-5)
     config.network_fn = lambda: OptionCriticNet(NatureConvBody(), config.action_dim, num_options=4)
     config.random_option_prob = LinearSchedule(0.1)
     config.state_normalizer = ImageNormalizer()
@@ -60,6 +61,10 @@ if __name__ == '__main__':
     random_seed()
     # -1 is CPU, a positive integer is the index of GPU
     Config.DEVICE = torch.device('cuda')
-
     game = 'AmidarNoFrameskip-v4'
-    option_critic_pixel(game=game)
+
+    parser = argparse.ArgumentParser(description="Option Critic PyTorch")
+    parser.add_argument('--lr',type=float, default=1e-4, help='Learning rate')
+    args = parser.parse_args()
+
+    option_critic_pixel(lr=args.lr, game=game)
