@@ -9,7 +9,6 @@ from collections import deque
 import cv2
 
 from deep_rl.toybox.reset_wrapper import (
-    ToyboxEnvironment,
     customAmidarResetWrapper,
 )
 

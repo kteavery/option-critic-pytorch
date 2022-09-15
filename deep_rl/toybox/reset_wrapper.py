@@ -10,13 +10,13 @@ from toybox.envs.atari.amidar import AmidarEnv
 
 # from deep_rl.component.utils import GymEnvironment, DuplicateEnvironment
 
-from deep_rl.component.utils import (
-    NoopResetEnv,
-    MaxAndSkipEnv,
-    FireResetEnv,
-    WarpFrame,
-    LifeLostEnv, # copied from all 
-)
+# from deep_rl.component.utils import (
+#     NoopResetEnv,
+#     MaxAndSkipEnv,
+#     FireResetEnv,
+#     WarpFrame,
+#     LifeLostEnv, # copied from all 
+# )
 
 class AmidarResetWrapper(gym.Wrapper):
     """Resets amidar environment at the start of every episode to an intervened state."""
