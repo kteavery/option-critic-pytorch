@@ -12,10 +12,18 @@ from gym.spaces.box import Box
 from gym.spaces.discrete import Discrete
 
 from .utils import make_atari, wrap_deepmind
-from .utils import FrameStack as FrameStack_
+#from .utils import FrameStack as FrameStack_
 from .utils import SubprocVecEnv, VecEnv
 
 from ..utils import *
+
+from gym.wrappers import AtariPreprocessing, TransformReward
+from gym.wrappers import FrameStack as FrameStack_
+
+from deep_rl.toybox.reset_wrapper import (
+    ToyboxEnvironment,
+    customAmidarResetWrapper,
+)
 
 try:
     import roboschool
@@ -24,19 +32,21 @@ except ImportError:
 
 
 # adapted from https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/blob/master/envs.py
-def make_env(env_id, seed, rank, episode_life=True):
+def make_env(env_id, seed, rank, episode_life=True, toybox=False):
     def _thunk():
         random_seed(seed)
         if env_id.startswith("dm"):
             import dm_control2gym
             _, domain, task = env_id.split('-')
             env = dm_control2gym.make(domain_name=domain, task_name=task)
+            env.seed(seed + rank)
+            env = OriginalReturnWrapper(env)
         else:
             env = gym.make(env_id)
-        is_atari = hasattr(gym.envs, 'atari') and isinstance(
-            env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
+        is_atari = (hasattr(gym.envs, 'atari') and isinstance(
+            env.unwrapped, gym.envs.atari.atari_env.AtariEnv)) or toybox
         if is_atari:
-            env = make_atari(env_id)
+            env = make_atari(env_id, toybox)
         env.seed(seed + rank)
         env = OriginalReturnWrapper(env)
         if is_atari:

@@ -30,7 +30,7 @@ def option_critic_feature(**kwargs):
     run_steps(OptionCriticAgent(config))
 
 
-def option_critic_pixel(lr=1e-4, **kwargs):
+def option_critic_pixel(lr=0.001, **kwargs):
     generate_tag(kwargs)
     kwargs.setdefault('log_level', 0)
     config = Config()
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     game = 'AmidarNoFrameskip-v4'
 
     parser = argparse.ArgumentParser(description="Option Critic PyTorch")
-    parser.add_argument('--lr',type=float, default=1e-4, help='Learning rate')
+    parser.add_argument('--lr',type=float, default=0.001, help='Learning rate') # original default=0.0001
     args = parser.parse_args()
 
     option_critic_pixel(lr=args.lr, game=game)

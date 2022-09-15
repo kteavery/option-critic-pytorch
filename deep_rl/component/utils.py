@@ -8,6 +8,11 @@ from abc import ABC, abstractmethod
 from collections import deque
 import cv2
 
+from deep_rl.toybox.reset_wrapper import (
+    ToyboxEnvironment,
+    customAmidarResetWrapper,
+)
+
 class NoopResetEnv(gym.Wrapper):
     def __init__(self, env, noop_max=30):
         """Sample initial states by taking random number of no-ops on reset.
@@ -220,8 +225,18 @@ class ScaledFloatFrame(gym.ObservationWrapper):
         # with smaller replay buffers only.
         return np.array(observation).astype(np.float32) / 255.0
 
-def make_atari(env_id, max_episode_steps=None):
-    env = gym.make(env_id)
+def make_atari(env_id, toybox=False, max_episode_steps=None):
+    if toybox:
+        if env_name == "Amidar":
+            custom_wrapper = customAmidarResetWrapper(0, -1, 3)
+        else:
+            raise ValueError(f"Unrecognized env_name: {env_name}")
+        env = ToyboxEnvironment(
+            env_name + "Toybox", device=device, custom_wrapper=custom_wrapper
+        )
+    else: 
+        env = gym.make(env_id)
+
     assert 'NoFrameskip' in env.spec.id
     env = NoopResetEnv(env, noop_max=30)
     env = MaxAndSkipEnv(env, skip=4)
