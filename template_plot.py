@@ -8,29 +8,15 @@ from deep_rl import *
 def plot_atari():
     plotter = Plotter()
     games = [
-        'BreakoutNoFrameskip-v4',
+        'AmidarNoFrameskip-v4',
     ]
 
     patterns = [
-        'remark_a2c',
-        'remark_categorical',
-        'remark_dqn',
-        'remark_n_step_dqn',
         'remark_option_critic',
-        'remark_quantile',
-        'remark_ppo',
-        # 'remark_rainbow',
     ]
 
     labels = [
-        'A2C',
-        'C51',
-        'DQN',
-        'N-Step DQN',
         'OC',
-        'QR-DQN',
-        'PPO',
-        # 'Rainbow'
     ]
 
     plotter.plot_games(games=games,
@@ -47,7 +33,7 @@ def plot_atari():
 
     # plt.show()
     plt.tight_layout()
-    plt.savefig('images/Breakout.png', bbox_inches='tight')
+    plt.savefig('images/Amidar.png', bbox_inches='tight')
 
 
 if __name__ == '__main__':

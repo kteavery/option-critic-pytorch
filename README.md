@@ -47,20 +47,9 @@ Please use this bibtex if you want to cite this repo
 
 # Curves (commit ```9e811e```)
 
-## BreakoutNoFrameskip-v4 (1 run)
+## AmidarNoFrameskip-v4 (1 run)
 
-![Loading...](https://raw.githubusercontent.com/ShangtongZhang/DeepRL/master/images/Breakout.png)
-
-## Mujoco 
-
-* DDPG/TD3 evaluation performance.
-![Loading...](https://raw.githubusercontent.com/ShangtongZhang/DeepRL/master/images/mujoco_eval.png)
-(5 runs, mean + standard error)
-
-* PPO online performance. 
-![Loading...](https://raw.githubusercontent.com/ShangtongZhang/DeepRL/master/images/PPO.png)
-(5 runs, mean + standard error, smoothed by a window of size 10)
-
+![Loading...](https://raw.githubusercontent.com/ShangtongZhang/DeepRL/master/images/Amidar.png)
 
 # References
 * [Human Level Control through Deep Reinforcement Learning](https://www.nature.com/nature/journal/v518/n7540/full/nature14236.html)
