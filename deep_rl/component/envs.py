@@ -25,11 +25,6 @@ from deep_rl.toybox.reset_wrapper import (
     customAmidarResetWrapper,
 )
 
-try:
-    import roboschool
-except ImportError:
-    pass
-
 
 # adapted from https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/blob/master/envs.py
 def make_env(env_id, seed, rank, episode_life=True, toybox=False):

@@ -13,6 +13,29 @@ from deep_rl.toybox.reset_wrapper import (
     customAmidarResetWrapper,
 )
 
+class LifeLostEnv(gym.Wrapper):
+    def __init__(self, env):
+        '''
+        Modified wrapper to add a "life_lost" key to info.
+        This allows the agent Body to make the episode as done
+        if it desires.
+        '''
+        gym.Wrapper.__init__(self, env)
+        self.lives = 0
+
+    def reset(self):
+        self.lives = 0
+        return self.env.reset()
+
+    def step(self, action):
+        obs, reward, done, _ = self.env.step(action)
+        lives = self.env.unwrapped.ale.lives()
+        life_lost = (lives < self.lives and lives > 0)
+        self.lives = lives
+        info = {'life_lost': life_lost}
+        return obs, reward, done, info
+
+
 class NoopResetEnv(gym.Wrapper):
     def __init__(self, env, noop_max=30):
         """Sample initial states by taking random number of no-ops on reset.
@@ -44,23 +67,43 @@ class NoopResetEnv(gym.Wrapper):
 
 class FireResetEnv(gym.Wrapper):
     def __init__(self, env):
-        """Take action on reset for environments that are fixed until firing."""
+        '''
+        Take action on reset for environments that are fixed until firing.
+
+        Important: This was modified to also fire on lives lost.
+        '''
         gym.Wrapper.__init__(self, env)
         assert env.unwrapped.get_action_meanings()[1] == 'FIRE'
         assert len(env.unwrapped.get_action_meanings()) >= 3
+        self.lives = 0
+        self.was_real_done = True
 
     def reset(self, **kwargs):
         self.env.reset(**kwargs)
-        obs, _, done, _ = self.env.step(1)
-        if done:
-            self.env.reset(**kwargs)
-        obs, _, done, _ = self.env.step(2)
-        if done:
-            self.env.reset(**kwargs)
+        obs, _ = self.fire()
+        self.lives = self.env.unwrapped.ale.lives()
         return obs
 
-    def step(self, ac):
-        return self.env.step(ac)
+    def step(self, action):
+        obs, reward, done, info = self.env.step(action)
+        if self.lost_life():
+            obs, done = self.fire()
+        self.lives = self.env.unwrapped.ale.lives()
+        return obs, reward, done, info
+
+    def fire(self):
+        obs, _, done, _ = self.env.step(1)
+        if done:
+            self.env.reset()
+        obs, _, done, _ = self.env.step(2)
+        if done:
+            obs = self.env.reset()
+            done = False
+        return obs, done
+
+    def lost_life(self):
+        lives = self.env.unwrapped.ale.lives()
+        return lives < self.lives and lives > 0
 
 class EpisodicLifeEnv(gym.Wrapper):
     def __init__(self, env):
@@ -231,9 +274,8 @@ def make_atari(env_id, toybox=False, max_episode_steps=None):
             custom_wrapper = customAmidarResetWrapper(0, -1, 3)
         else:
             raise ValueError(f"Unrecognized env_name: {env_name}")
-        env = ToyboxEnvironment(
-            env_name + "Toybox", device=device, custom_wrapper=custom_wrapper
-        )
+        env = gym.make(env_id)
+        env = custom_wrapper(env)
     else: 
         env = gym.make(env_id)
 
