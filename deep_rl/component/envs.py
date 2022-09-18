@@ -11,7 +11,7 @@ import torch
 from gym.spaces.box import Box
 from gym.spaces.discrete import Discrete
 
-from .utils import make_atari, wrap_deepmind
+from all.environments import AtariEnvironment
 from .utils import FrameStack as FrameStack_
 from .utils import SubprocVecEnv, VecEnv
 
@@ -31,20 +31,17 @@ def make_env(env_id, seed, rank, episode_life=True):
             import dm_control2gym
             _, domain, task = env_id.split('-')
             env = dm_control2gym.make(domain_name=domain, task_name=task)
+            env.seed(seed + rank)
+            env = OriginalReturnWrapper(env)
         else:
-            env = gym.make(env_id)
-        is_atari = hasattr(gym.envs, 'atari') and isinstance(
-            env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
-        if is_atari:
-            env = make_atari(env_id)
-        env.seed(seed + rank)
-        env = OriginalReturnWrapper(env)
-        if is_atari:
-            env = wrap_deepmind(env,
-                                episode_life=episode_life,
-                                clip_rewards=False,
-                                frame_stack=False,
-                                scale=False)
+            env = AtariEnvironment(env_id, device="cuda")
+            env.seed(seed + rank)
+            env = OriginalReturnWrapper(env)
+            # env = wrap_deepmind(env,
+            #                     episode_life=episode_life,
+            #                     clip_rewards=False,
+            #                     frame_stack=False,
+            #                     scale=False)
             obs_shape = env.observation_space.shape
             if len(obs_shape) == 3:
                 env = TransposeImage(env)
