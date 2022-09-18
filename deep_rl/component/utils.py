@@ -270,7 +270,7 @@ class ScaledFloatFrame(gym.ObservationWrapper):
 def make_atari(env_id, toybox=False, max_episode_steps=None):
     if toybox:
         if "Amidar" in env_id:
-            custom_wrapper = customAmidarResetWrapper(0, -1, 3)
+            custom_wrapper = customAmidarResetWrapper(-1, 3)
         else:
             raise ValueError(f"Unrecognized env_name: {env_id}")
         env = gym.make(env_id)
