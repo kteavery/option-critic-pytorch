@@ -233,6 +233,7 @@ class TimeLimit(gym.Wrapper):
         super(TimeLimit, self).__init__(env)
         self._max_episode_steps = max_episode_steps
         self._elapsed_steps = 0
+        self.toybox = env.toybox
 
     def step(self, ac):
         observation, reward, done, info = self.env.step(ac)
