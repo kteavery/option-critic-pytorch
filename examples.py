@@ -30,15 +30,18 @@ def option_critic_feature(**kwargs):
     run_steps(OptionCriticAgent(config))
 
 
-def option_critic_pixel(lr=0.001, num_options=8, **kwargs):
+def option_critic_pixel(lr=0.001, num_options=8, toybox=True, **kwargs):
     generate_tag(kwargs)
     kwargs.setdefault('log_level', 0)
     config = Config()
     config.merge(kwargs)
 
-    config.task_fn = lambda: Task(config.game, num_envs=config.num_workers)
-    config.eval_env = Task(config.game)
+    config.toybox = toybox
     config.num_workers = 16
+
+    config.task_fn = lambda: Task(config.game, toybox=toybox, num_envs=config.num_workers)
+    config.eval_env = Task(config.game, toybox=toybox)
+
     config.optimizer_fn = lambda params: torch.optim.RMSprop(params, lr=lr, alpha=0.99, eps=1e-5)
     config.network_fn = lambda: OptionCriticNet(NatureConvBody(), config.action_dim, num_options=num_options)
     config.random_option_prob = LinearSchedule(0.1)
@@ -66,6 +69,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Option Critic PyTorch")
     parser.add_argument('--lr',type=float, default=0.001, help='Learning rate') # original default=0.0001
     parser.add_argument('--num_options',type=int, default=8, help='Number of options') # original default=4
+    parser.add_argument('--toybox',type=bool, default=True, help='Toybox or regular ALE env') 
     args = parser.parse_args()
 
-    option_critic_pixel(lr=args.lr, num_options=args.num_options, game=game)
+    option_critic_pixel(lr=args.lr, num_options=args.num_options, toybox=args.toybox, game=game)
