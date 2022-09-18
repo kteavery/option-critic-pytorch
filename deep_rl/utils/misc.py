@@ -25,6 +25,7 @@ def run_steps(agent):
             agent.save('data/%s-%s-%d' % (agent_name, config.tag, agent.total_steps))
             print("agent.prev_options:")
             print(agent.prev_options)
+            torch.save(agent.prev_options,"data/prev_options_"+str(agent.total_steps)+".pt")
         if config.log_interval and not agent.total_steps % config.log_interval:
             agent.logger.info('steps %d, %.2f steps/s' % (agent.total_steps, config.log_interval / (time.time() - t0)))
             t0 = time.time()

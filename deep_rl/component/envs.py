@@ -12,16 +12,15 @@ from gym.spaces.box import Box
 from gym.spaces.discrete import Discrete
 
 from .utils import make_atari, wrap_deepmind
-#from .utils import FrameStack as FrameStack_
+from .utils import FrameStack as FrameStack_
 from .utils import SubprocVecEnv, VecEnv
 
 from ..utils import *
 
-from gym.wrappers import AtariPreprocessing, TransformReward
-from gym.wrappers import FrameStack as FrameStack_
+# from gym.wrappers import AtariPreprocessing, TransformReward
+# from gym.wrappers import FrameStack as FrameStack_
 
 from deep_rl.toybox.reset_wrapper import (
-    ToyboxEnvironment,
     customAmidarResetWrapper,
 )
 
