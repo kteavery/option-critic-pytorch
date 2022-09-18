@@ -34,7 +34,8 @@ def make_env(env_id, seed, rank, episode_life=True):
             env.seed(seed + rank)
             env = OriginalReturnWrapper(env)
         else:
-            env = AtariEnvironment(env_id, device="cuda")
+            if env_id == "AmidarNoFrameskip-v4":
+                env = AtariEnvironment("Amidar", device="cuda")
             env.seed(seed + rank)
             env = OriginalReturnWrapper(env)
             # env = wrap_deepmind(env,
